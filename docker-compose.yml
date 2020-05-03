@@ -1,0 +1,41 @@
+version: "3"
+services:
+
+    flaskcontainer:
+        container_name: 'flaskos'
+        build:
+            context: .
+            dockerfile: "Dockerfile"
+        ports:
+            - "80:80"
+        networks:
+            - "urlshortner"
+        volumes:
+            - ./project:/root/project
+        links: 
+            - "dbos:database"
+        networks:
+          - urlshort
+        depends_on:
+          - dbos
+    dbos:
+        image: mysql:5.7
+        container_name: 'dbos'
+        restart: 'always'
+        volumes: 
+          - mysql-data:/var/lib/mysql
+        environment:
+          MYSQL_ROOT_PASSWORD: "jakaas"
+          MYSQL_DATABASE: "url_short"
+          MYSQL_USER: "demo"
+          MYSQL_PASSWORD: "jakaas"
+        networks:
+          - urlshort
+
+
+
+volumes:
+  mysql-data:
+networks:
+  urlshort:
+
